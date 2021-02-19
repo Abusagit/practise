@@ -1,4 +1,8 @@
+
 def prefix(s:str) -> list:
+    """
+    Creates prefix function for KMP algorithm
+    """
     P = [0 for _ in range(len(s))]
     i, j = 0, 1
     while j < len(s):
@@ -14,7 +18,11 @@ def prefix(s:str) -> list:
             j += 1
     return P
 
-def kmp(string, substring) -> list:
+
+def kmp(string, substring):
+    """
+    Performs KMP search
+    """
     sub_len = len(substring)
     str_len = len(string)
     if not str_len or sub_len > str_len:
@@ -40,6 +48,9 @@ def kmp(string, substring) -> list:
 
 
 def kmp_with_crossed_entries(string, substring, symbol='@'):
+    """
+    Performs KMP search with crossing entries
+    """
     entries = []
     mega = substring + symbol + string
     length = len(mega)

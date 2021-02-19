@@ -34,17 +34,20 @@ def selectionSort(array):
 
 
 def merge_arrays(left, right):
+    """
+    Performs merging of 2 sorted arrays
+    """
     M = [None] * (len(left) + len(right))
     # print(C)
     i = k = n = 0
-    while i < len(left) and k < len(right): # ока не вышли за границы массива
+    while i < len(left) and k < len(right): # Пока не вышли за границы массива
         if left[i] <= right[k]:
             M[n] = left[i]
             i += 1
         else:
             M[n] = right[k]
             k += 1
-        n += 1 # left or right is out of range here
+        n += 1  # left or right is out of range here
     # while i < len(left):
     #     M[n] = left[i]
     #     i += 1
@@ -60,13 +63,12 @@ def merge_arrays(left, right):
     return M
 
 
-def quickSort(a):  # TODO why does it not work with variables there but works when imporing
+def quickSort(a):
     """
 
     :param a:
     :return:
     """
-    # print('array', a)  # TODO replace pivot to the middle of the array
     if len(a) < 2:
         return a
     else:
@@ -106,6 +108,11 @@ def quickSort(a):  # TODO why does it not work with variables there but works wh
 
 
 def merge_sort(a):
+    """
+    param a: array
+
+    Performs sorting by  merging
+    """
     if len(a) <= 1:
         return a
     middle = len(a) // 2

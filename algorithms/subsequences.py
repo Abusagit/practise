@@ -141,11 +141,11 @@ lnis = longest_non_increasing_subseq
 
 
 def lnis_indeces(a):
-    '''
+    """
     >>> lnis_indeces([32, 27, 74, 20, 27, 34, 7, 41, 65, 66, 19, 75, 58, 38, 49,85, 4, 50])
     5
     3 10 13 15 17
-    '''
+    """
     def _getInd(arr, T, l, r, key):
         while r - l > 1:
             m = l + (r - l) // 2

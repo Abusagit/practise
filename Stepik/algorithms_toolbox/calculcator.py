@@ -35,5 +35,36 @@ def calculator(x) -> list:
     return ans
 
 
+def calcV2(x):
+    """
+    >>>
+
+    """
+    tmp = [[float('inf') for _ in range(x + 1)] for _ in range(2)] # 0 - steps, 1 - previous
+    tmp[0][1] = 0
+    result = [x]
+    for i in range(1, x + 1):
+        a = i * 3
+        b = i * 2
+        c = i + 1
+        for j in (a, b, c):
+            if j <= x:
+                steps = tmp[0][i] + 1
+                if tmp[0][j] > steps:
+                    tmp[0][j] = steps
+                    tmp[1][j] = i
+        if x < c < b < a:
+            break
+    i = tmp[-1][-1]
+    while i != 1:
+        result.append(i)
+        i = tmp[1][i]
+    result.append(1)
+    result.reverse()
+    print(tmp[0][-1])
+    return result
+
+
 if __name__ == '__main__':
     print(*calculator(5))
+    print(*calcV2(5))
