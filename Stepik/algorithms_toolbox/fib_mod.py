@@ -7,8 +7,6 @@ def fib_mod(n, m):
     >>> fib_mod(1598753, 25897)
     20305
     """
-    
-
 
 if __name__ == '__main__':
     import doctest
