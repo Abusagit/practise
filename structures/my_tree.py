@@ -2,6 +2,7 @@
 Tree data structure implementation
 """
 
+
 def tree_list_example():
     """
     example
@@ -14,9 +15,11 @@ def tree_list_example():
 
 
 '''list implementation of binary tree'''
+
+
 def tree(r):
     """
-    recurcive bin tree
+    recursive bin tree
 
     lists as trees
     """
@@ -59,6 +62,7 @@ def getRightChild(root):
 
 '''Node and references'''
 
+
 class BinaryTree:
     def __init__(self, rootObj):
         self.key = rootObj
@@ -68,7 +72,7 @@ class BinaryTree:
     def insertLeft(self, newNode):
         if not self.left:
             self.left = BinaryTree(newNode)
-        else: # node with an existing left child
+        else:  # node with an existing left child
             t = BinaryTree(newNode)
             t.left = self.left
             self.left = t
@@ -93,5 +97,3 @@ class BinaryTree:
     def getRootVal(self):
         return self.key
 
-    
-if __name__ == '__main__':
