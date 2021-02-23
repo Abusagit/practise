@@ -1,6 +1,6 @@
 class BinHeap:
     def __init__(self):
-        self.heapList = [0] # isn`t used and simplifies division and parent recognition
+        self.heapList = [0]  # isn`t used and simplifies division and parent recognition
         self.currentSize = 0
 
     def siftUp(self, i):

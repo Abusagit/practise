@@ -1,5 +1,5 @@
-from structures.my_tree import BinaryTree
-from structures.my_stack import Stack
+from self_educ.my_tree import BinaryTree
+from self_educ.my_stack import Stack
 import operator
 
 
@@ -8,12 +8,15 @@ import operator
 
 def build_parse_tree(fpexp):
     fplist = fpexp.split()
+    print(fplist)
+    print(fpexp)
     stack = Stack()
     tree = BinaryTree('')
     stack.push(tree)
     currentTree = tree
 
     for i in fplist:
+        print(i)
         if i == '(':
             currentTree.insertLeft('(')
             stack.push(currentTree)
@@ -28,7 +31,7 @@ def build_parse_tree(fpexp):
         elif i == ')':
             currentTree = stack.pop()
 
-        else:
+        elif i.isdigit():
             try:
                 currentTree.setRootVal(int(i))
                 parent = stack.pop()
@@ -94,14 +97,13 @@ def postordereval(tree):
 
 
 def recover_exp(tree):
-    sVal = ''
-    if tree:
-        sVal = '(' + recover_exp(tree.getLeftChild()) + str(tree.getRootVal()) + recover_exp(tree.getRightChild()) + ')'
-        # sVal = recover_exp(tree.getLeftChild())
-        # sVal += str(tree.getRootVal())
-        # sVal += recover_exp(tree.getRightChild())
-
-    return sVal
+    if tree.leftChild:
+        print('(', end=' ')
+        recover_exp(tree.getLeftChild())
+    print(tree.getRootVal(), end=' ')
+    if tree.rightChild:
+        recover_exp(tree.getRightChild())
+        print(')', end=' ')
 
 
 if __name__ == '__main__':
