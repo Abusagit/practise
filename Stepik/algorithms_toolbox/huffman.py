@@ -1,19 +1,24 @@
-import heapq # очередь с приоритетами
-from collections import Counter # считает сразу количество символов
+import heapq  # очередь с приоритетами
+from collections import Counter  # считает сразу количество символов
+
 
 class Node():
     def __init__(self, left, right):
         self.left = left
         self.right = right
+
     def walk(self, code, acc):
         self.left.walk(code, acc + '0')
         self.right.walk(code, acc + '1')
 
+
 class Leaf():
     def __init__(self, char):
         self.char = char
+
     def walk(self, code, acc):
         code[self.char] = acc or '0'
+
 
 def huffman_encode(s):
     h = []
@@ -45,7 +50,7 @@ def encoder():
 
 
 def huffman_decode(s, codes):
-    d = {code: char  for char, code in codes.items()}
+    d = {code: char for char, code in codes.items()}
     acc = ''
     string = ''
     for i in s:
@@ -54,6 +59,7 @@ def huffman_decode(s, codes):
             string += d[acc]
             acc = ''
     return string
+
 
 def _test(n_iter=100):
     import random
