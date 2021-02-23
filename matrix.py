@@ -1,4 +1,4 @@
-class Matrix():  # Cоздание класса матрицы
+class Matrix:  # Cоздание класса матрицы
     def __init__(self, matrix: list):
         self.matrix = matrix  # Запись матрицы в атрибут экземпляра класса
         self.determinant = Matrix.determ(self.matrix) if len(matrix) == len(matrix[0]) else None  # Проверка
