@@ -258,10 +258,10 @@ class AVLTree(BinSearchTree):
         rotRoot.BalanceFactor = rotRoot.balanceFactor + 1 - min(newRoot.balanceFactor, 0)
         newRoot.BalanceFactor = newRoot.balanceFactor + 1 + max(rotRoot.balanceFactor, 0)
 
-    def rotateRight(self,rotRoot):
+    def rotateRight(self, rotRoot):
         newRoot = rotRoot.leftChild
         rotRoot.leftChild = newRoot.rightChild
-        if newRoot.rightChild != None:
+        if newRoot.rightChild:
             newRoot.rightChild.parent = rotRoot
         newRoot.parent = rotRoot.parent
         if rotRoot.isRoot():
