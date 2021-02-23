@@ -4,6 +4,7 @@ import unittest
 from .bst import BinarySearchTree, TreeNode
 from structures.trees.binaryTree import height
 
+
 class AVLTree(BinarySearchTree):
     """
     Author:  Brad Miller
@@ -110,19 +111,10 @@ class AVLTree(BinarySearchTree):
         rightHeight = rightHeight or height(pos.rightChild)
         leftHeight = leftHeight or height(pos.leftChild)
         subtreeHeight = 1 + max(rightHeight, leftHeight)
+        pos.balanceFactor = leftHeight - rightHeight
 
         if pos.isRoot():
-            pos.balanceFactor = leftHeight - rightHeight
             return
-
-        if not pos.hasBothChildren():
-            pos.balanceFactor = 0
-        elif pos.hasRightChild() and not pos.hasLeftChild():
-            pos.balanceFactor = -rightHeight
-        elif pos.hasLeftChild() and not pos.hasRightChild():
-            pos.balanceFactor = leftHeight
-        else:
-            pos.balanceFactor = leftHeight - rightHeight
 
         if pos.isLeftChild():
             self.adjust_del_balance(pos.parent, leftHeight=subtreeHeight)
