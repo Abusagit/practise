@@ -1,13 +1,14 @@
 import operator as op
 
+
 def reverse_polish_notation(*pargs):
-    '''
+    """
     for multiplication, divition, summation, subtraction
 
     [5, 2, '+'] <-> 5 + 2
     [2, 7, '+', 5, '*'] <-> (2 + 7) * 5
     :return: result
-    '''
+    """
     stack = []
     operator = {'+': op.add,
                 '-': op.sub,
@@ -25,36 +26,49 @@ def reverse_polish_notation(*pargs):
     return stack.pop()
 
 
-def brackets_check(s) -> float:
-    ''':key
+def brackets_check(s) -> str or int:
+    """:key
     ckecks brackets sequence correction
     >>> brackets_check('((()))[][()]')
-    True
+    'Success'
     >>> brackets_check('()')
-    True
+    'Success'
     >>> brackets_check('(([()))')
-    False
+    6
     >>> brackets_check('(')
-    False
-    '''
+    1
+    >>> brackets_check('{{[()]]')
+    7
+    >>> brackets_check('{}')
+    'Success'
+    """
     stack = []
+    i = 1
     for letter in s:
-        if letter not in '()[]':
+        if letter not in '()[]{}':
+            i += 1
             continue
-        if letter in '([':
-            stack.append(letter)
+        if letter in '([{':
+            stack.append((letter, i))
         else:
-            assert letter in ')]', f'closing bracket expected, got {letter}'
+            assert letter in ')]}', f'closing bracket expected, got {letter}'
             if not stack:
-                return False
-            left = stack.pop()
-            right = ')' if left == '(' else ']'
+                return i
+            left, index = stack.pop()
+            if left == '(':
+                right = ')'
+            elif left == '[':
+                right = ']'
+            else:
+                right = '}'
             if right != letter:
-                return False
-    return True if not stack else False
+                return i
+        i += 1
+    return 'Success' if not stack else stack.pop()[1]
+
 
 if __name__ == '__main__':
     a = reverse_polish_notation(2, 3, '-', -5, '*')
-    print(a, end=f'\n{"-"*50}\n')
+    print(a, end=f'\n{"-" * 50}\n')
     import doctest
     doctest.testmod(verbose=True)
