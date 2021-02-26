@@ -41,7 +41,8 @@ class Graph:
         
     def __iter__(self):
         return iter(self.vertices.values())
-                
+
+
 class Vertex:
     def __init__(self,num):
         self.id = num

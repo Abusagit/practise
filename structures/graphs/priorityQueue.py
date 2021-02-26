@@ -112,6 +112,7 @@ class TestBinHeap(unittest.TestCase):
     def testDecKey(self):
         self.theHeap.decreaseKey('d',1)
         assert self.theHeap.delMin() == 'd'
-        
+
+
 if __name__ == '__main__':
     unittest.main()
