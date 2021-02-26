@@ -12,16 +12,19 @@ def processing(size, number):
     for arrival, duration in processes:
         while deq and arrival >= sum(deq[0]):
             deq.popleft()
-        if not deq:
-            print(arrival)
-            deq.append((arrival, duration))
-        elif len(deq) >= size or arrival < sum(deq[-1]):
+        if len(deq) >= size:
             print(-1)
-        else:
-            print(arrival)
+        elif not deq:
             deq.append((arrival, duration))
-
+            print(arrival)
+        else: # something in deque
+            if arrival >= sum(deq[-1]):
+                print(arrival)
+                deq.append((arrival, duration))
+            else:
+                print(sum(deq[-1]))
+                deq.append((sum(deq[-1]), duration))
 
 
 if __name__ == '__main__':
-    processing(2, 8)
+    processing(1, 5)
