@@ -1,15 +1,12 @@
-# Bradley N. Miller, David L. Ranum
-# Introduction to Data Structures and Algorithms in Python
-# Copyright 2005
-# 
-# stack.py
+from collections import deque
+
 
 class Stack:
     def __init__(self):
-        self.items = []
+        self.items = deque()
 
     def isEmpty(self):
-        return self.items == []
+        return len(self.items) == 0
 
     def push(self, item):
         self.items.append(item)
@@ -20,25 +17,25 @@ class Stack:
     def peek(self):
         return self.items[-1]
 
-    def size(self):
+    def __len__(self):
         return len(self.items)
 
 
 class MaxStack(Stack):
     def __init__(self):
         super(MaxStack, self).__init__()
-        self._max = None
+        self._max = float('-inf')
 
     def max(self):
-        print(self._max)  # shows current maximum value in stack
+        return self._max  # shows current maximum value in stack
 
     def push(self, item):
         if self.isEmpty():
             self._max = item
-            super(MaxStack, self).push((item, item))
+            super(MaxStack, self).push((item, float('-inf')))
         else:
             if item > self._max:
-                super(MaxStack, self).push((item, item))
+                super(MaxStack, self).push((item, self._max))
                 self._max = item
             else:
                 super(MaxStack, self).push((item, self._max))

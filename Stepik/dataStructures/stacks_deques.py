@@ -47,13 +47,33 @@ def slide_max2(n, m, numbers):
     """
     faster
     """
+    if m == 1:
+        print(*numbers)
+        return
+    entry = s.MaxStack()
+    out = s.MaxStack()
+    numbers = deque(numbers)
+    while numbers:
+        num = numbers.popleft()
+        if out.isEmpty() and len(entry) < m:
+            entry.push(num)
+            if len(entry) == m:
+                while not entry.isEmpty():
+                    out.push(entry.pop())
+                print(out.max(), end=' ')
+                out.pop()
+        else:
+            entry.push(num)
+            print(max(out.max(), entry.max()), end=' ')
+            out.pop()
+
 
 
 if __name__ == '__main__':
-    def test():
+    def test(func):
         n = int(input())
         numbers = [int(i) for i in input().split()]
         m = int(input())
-        slide_max2(n, m, numbers)
+        func(n, m, numbers)
 
-    test()
+    test(slide_max2)
