@@ -11,6 +11,7 @@ def bfs_paths(graph, start, goal):
 
 def dijkstra(graph, costs, parents, start, finish):
     processed = []
+
     def find_lowest_cost_node(costs):
         nonlocal processed
         lowest_cost = float('inf')
@@ -21,6 +22,7 @@ def dijkstra(graph, costs, parents, start, finish):
                 lowest_cost = cost
                 lowest_cost_node = node
         return lowest_cost_node
+
     node = find_lowest_cost_node(costs)
     while node:
         cost = costs[node]
@@ -38,6 +40,7 @@ def dijkstra(graph, costs, parents, start, finish):
     print(f'lowest cost is {costs[finish]}')
     return way[::-1]
 
+
 if __name__ == '__main__':
     g = {
         'A': {'B', 'C'},
@@ -51,7 +54,7 @@ if __name__ == '__main__':
     for path in bfs_paths(g, 'A', 'F'):
         print(path)
     graph = {
-        'start' : {'a' : 6, 'b': 2},
+        'start': {'a': 6, 'b': 2},
         'a': {'fin': 1},
         'b': {'a': 3, 'fin': 5},
         'fin': {}
