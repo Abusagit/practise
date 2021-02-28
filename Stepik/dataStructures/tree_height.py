@@ -1,4 +1,4 @@
-from structures.basic.stack import Stack
+from structures.basic.stacks import Stack
 
 
 def tree_height(n):

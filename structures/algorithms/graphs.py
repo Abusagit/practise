@@ -1,12 +1,12 @@
 def bfs_paths(graph, start, goal):
     queue = [(start, [start])]
     while queue:
-        (vertex, path) = queue.pop(0)
-        for next in graph[vertex] - set(path):
-            if next == goal:
-                yield path + [next]
+        vertex, path_ = queue.pop(0)
+        for next_ in graph[vertex] - set(path):
+            if next_ == goal:
+                yield path + [next_]
             else:
-                queue.append((next, path + [next]))
+                queue.append((next_, path + [next_]))
 
 
 def dijkstra(graph, costs, parents, start, finish):

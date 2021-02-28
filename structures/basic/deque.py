@@ -3,26 +3,27 @@
 # Copyright 2005
 # 
 # deque.py
+from collections import deque
 
 
 class Deque:
     def __init__(self):
-        self.items = []
+        self.items = deque()
 
     def isEmpty(self):
-        return self.items == []
+        return self.size()
 
     def addFront(self, item):
         self.items.append(item)
 
     def addRear(self, item):
-        self.items.insert(0,item)
+        self.items.appendleft(item)
 
     def removeFront(self):
         return self.items.pop()
 
     def removeRear(self):
-        return self.items.pop(0)
+        return self.items.popleft()
 
     def size(self):
         return len(self.items)

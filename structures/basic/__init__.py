@@ -1,9 +1,6 @@
+# __all__ = ["stacks"]
 
-#__all__ = ["stack"]
 
-
-from .stack import Stack
+from .stacks import Stack
 from .queue import Queue
 from .deque import Deque
-
-

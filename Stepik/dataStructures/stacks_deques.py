@@ -1,4 +1,4 @@
-from structures.basic import stack as s
+from structures.basic import stacks as s
 from collections import deque
 
 

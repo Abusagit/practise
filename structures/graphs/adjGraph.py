@@ -8,6 +8,7 @@
 import sys
 import os
 import unittest
+from collections import deque
 
 
 class Graph:
@@ -22,20 +23,17 @@ class Graph:
         return newVertex
     
     def getVertex(self,n):
-        if n in self.vertices:
-            return self.vertices[n]
-        else:
-            return None
+        return self.vertices[n] if n in self.vertices else None
 
-    def __contains__(self,n):
+    def __contains__(self, n):
         return n in self.vertices
     
-    def addEdge(self,f,t,cost=0):
+    def addEdge(self, f, t, cost=0):
             if f not in self.vertices:
                 nv = self.addVertex(f)
             if t not in self.vertices:
                 nv = self.addVertex(t)
-            self.vertices[f].addNeighbor(self.vertices[t],cost)
+            self.vertices[f].addNeighbor(self.vertices[t], cost)
     
     def getVertices(self):
         return list(self.vertices.keys())
@@ -45,7 +43,7 @@ class Graph:
 
 
 class Vertex:
-    def __init__(self,num):
+    def __init__(self, num):
         self.id = num
         self.connectedTo = {}
         self.color = 'white'
@@ -60,19 +58,19 @@ class Vertex:
     def addNeighbor(self, nbr, weight=0):
         self.connectedTo[nbr] = weight
         
-    def setColor(self,color):
+    def setColor(self, color):
         self.color = color
         
-    def setDistance(self,d):
+    def setDistance(self, d):
         self.dist = d
 
-    def setPred(self,p):
+    def setPred(self, p):
         self.pred = p
 
-    def setDiscovery(self,dtime):
+    def setDiscovery(self, dtime):
         self.disc = dtime
         
-    def setFinish(self,ftime):
+    def setFinish(self, ftime):
         self.fin = ftime
         
     def getFinish(self):
@@ -103,6 +101,33 @@ class Vertex:
         return self.id
 
 
+def bfs(graph: Graph, start: Vertex):
+    """
+    O(V)
+    """
+    start.setDistance(0)
+    start.setPred(None)
+    queue = deque()
+    queue.append(start)
+    while deque:
+        current_vertex = deque.popleft()
+        for neighbor in current_vertex.getConnections():
+            if neighbor.color == 'white':
+                neighbor.setColor('gray')
+                neighbor.setDistance(current_vertex.getDistance() + 1)
+                neighbor.setPred(current_vertex)
+                queue.append(neighbor)
+        current_vertex.setColor('black')
+
+
+def traverse(y: Vertex):
+    x = y
+    while x.getPred():
+        print(x.getId())
+        x = x.getPred()
+    print(x.getId())
+
+
 class adjGraphTests(unittest.TestCase):
     def setUp(self):
         self.tGraph = Graph()
@@ -122,4 +147,3 @@ class adjGraphTests(unittest.TestCase):
         
 if __name__ == '__main__':
     unittest.main()
-              
