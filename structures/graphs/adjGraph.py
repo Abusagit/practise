@@ -9,6 +9,7 @@ import sys
 import os
 import unittest
 
+
 class Graph:
     def __init__(self):
         self.vertices = {}
@@ -53,10 +54,10 @@ class Vertex:
         self.disc = 0
         self.fin = 0
 
-    # def __lt__(self,o):
-    #     return self.id < o.id
+    def __lt__(self, o):
+        return self.id < o.id
     
-    def addNeighbor(self,nbr,weight=0):
+    def addNeighbor(self, nbr, weight=0):
         self.connectedTo[nbr] = weight
         
     def setColor(self,color):
@@ -100,6 +101,7 @@ class Vertex:
     
     def getId(self):
         return self.id
+
 
 class adjGraphTests(unittest.TestCase):
     def setUp(self):

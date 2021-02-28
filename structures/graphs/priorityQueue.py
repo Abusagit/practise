@@ -1,11 +1,13 @@
 # Bradley N. Miller, David L. Ranum
 # Introduction to Data Structures and Algorithms in Python
 # Copyright 2005
-# 
+#
+import heapq
 import unittest
 
 # this implementation of binary heap takes key value pairs,
 # we will assume that the keys are all comparable
+
 
 class PriorityQueue:
     def __init__(self):
@@ -18,7 +20,7 @@ class PriorityQueue:
         for i in alist:
             self.heapArray.append(i)
         i = len(alist) // 2            
-        while (i > 0):
+        while i > 0:
             self.percDown(i)
             i = i - 1
                         
@@ -91,7 +93,8 @@ class PriorityQueue:
             if pair[1] == vtx:
                 return True
         return False
-        
+
+
 class TestBinHeap(unittest.TestCase):
     def setUp(self):
         self.theHeap = PriorityQueue()
