@@ -40,12 +40,12 @@ def dijkstra(graph, costs, parents, start, finish):
 
 if __name__ == '__main__':
     g = {
-        'A': set(['B', 'C']),
-        'B': set(['A', 'D', 'E']),
-        'C': set(['A', 'F']),
-        'D': set(['B']),
-        'E': set(['B', 'F']),
-        'F': set(['C', 'E'])
+        'A': {'B', 'C'},
+        'B': {'A', 'D', 'E'},
+        'C': {'A', 'F'},
+        'D': {'B'},
+        'E': {'B', 'F'},
+        'F': {'C', 'E'}
     }
     print(list(bfs_paths(g, 'A', 'F')))
     for path in bfs_paths(g, 'A', 'F'):
