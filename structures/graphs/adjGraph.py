@@ -105,6 +105,32 @@ class Vertex:
         return self.id
 
 
+class DFSGraph(Graph):
+    def __init__(self):
+        super(DFSGraph, self).__init__()
+        self.time = 0
+
+    def dfs(self):
+        for aVertex in self:
+            aVertex.setColor('white')
+            aVertex.setPred(-1)
+        for aVertex in self:
+            if aVertex.getColor() == 'white':
+                self.dfsvisit(aVertex)
+
+    def dfsvisit(self, startVertex):
+        startVertex.setCOLOR('gray')
+        self.time += 1
+        startVertex.setDiscovery(self.time)
+        for nextVertex in startVertex.getConnections():
+            if nextVertex.getColor() == 'white':
+                nextVertex.setPred(startVertex)
+                self.dfsvisit(nextVertex)
+        startVertex.setColor('black')
+        self.time += 1
+        startVertex.setFinish(self.time)
+
+
 def build_graph(graph_dict):
     """
     values must be in sets or in lists
@@ -147,27 +173,6 @@ def traverse(y: Vertex):
         print(x.getId())
         x = x.getPred()
     print(x.getId())
-# def bfs(g, start):
-#     start.setDistance(0)
-#     start.setPred(None)
-#     vertQueue = deque()
-#     vertQueue.append(start)
-#     while vertQueue:
-#         currentVert = vertQueue.popleft()
-#         for nbr in currentVert.getConnections():
-#             if nbr.getColor() == 'white':
-#                 nbr.setColor('gray')
-#                 nbr.setDistance(currentVert.getDistance() + 1)
-#                 nbr.setPred(currentVert)
-#                 vertQueue.append(nbr)
-#         currentVert.setColor('black')
-
-
-
-
-
-def knight_tour():
-    pass
 
 
 class adjGraphTests(unittest.TestCase):
