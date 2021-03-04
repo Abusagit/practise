@@ -2,9 +2,8 @@ import sys
 from collections import defaultdict, deque
 from DSA.basic import Stack
 from DSA.graphs import PriorityQueue
-import heapq
 
-''' Strongle connected components'''
+''' Strongle connected components''' # TODO
 
 
 class Graph:
@@ -127,238 +126,157 @@ class GraphMatrix:
 
 
 class Vertex:
-    def __init__(self, key):
-        self.v = key
-        self.connectedTo = {}
+    def __init__(self, name):
+        self.name = name
+        self.connections = {}
+        self.distance = float('inf')
+        self.predecessor = None
         self.color = 'white'
-        self.dist = sys.maxsize
-        self.pred = None
-        self.disc = 0
-        self.fin = 0
-
-    def __lt__(self, o):
-        return self.v < o.v
-
-    def addNeighbor(self, nbr, weight=0):
-        self.connectedTo[nbr] = weight
-
-    def setColor(self, color):
-        self.color = color
-
-    def setDistance(self, d):
-        self.dist = d
-
-    def setPred(self, p):
-        self.pred = p
-
-    def setDiscovery(self, dtime):
-        self.disc = dtime
-
-    def setFinish(self, ftime):
-        self.fin = ftime
-
-    def getFinish(self):
-        return self.fin
-
-    def getDiscovery(self):
-        return self.disc
-
-    def getPred(self):
-        return self.pred
-
-    def getDistance(self):
-        return self.dist
-
-    def getColor(self):
-        return self.color
-
-    def getConnections(self):
-        return self.connectedTo.keys()
-
-    def getWeight(self, nbr):
-        return self.connectedTo[nbr]
+        self.discoveryTime = 0
+        self.finishTime = 0
 
     def __repr__(self):
-        s = f'Vertex {self.v}: color {self.color}; disc {self.disc}; fin {self.fin}; dist {self.dist}; pred\t[{self.pred}]'
+        s = f'Vertex {self.name}: disc {self.disc}; fin {self.finish}; dist {self.distance}; pred\t[{self.predecessor}]'
         return s
 
     def __str__(self):
-        s = f'Vertex {self.v}'
+        s = f'Vertex {self.name}'
         return s
-
-    def getId(self):
-        return self.v
 
 
 class GraphList:
-    def __init__(self):
+    def __init__(self, directed=False):
         self.vertices = {}
-        self.numVertices = 0
         self.time = 0
+        self.directed = directed
+
+    def __iter__(self):
+        return iter(self.vertices.items())
+
+    def clean_color_predecessor_distance(self):
+        for i in self.vertices:
+            self[i].color = 'white'
+            self[i].predecessor = None
+            self[i].distance = float('inf')
 
     def __getitem__(self, item):
         return self.vertices[item]
 
+    def __contains__(self, item):
+        return item in self.vertices
+
     def __str__(self):
         f = ''
         for vertex, value in self.vertices.items():
-            f += f'Vertex {vertex}: '
-            for connected in value.connectedTo:
-                f += f'{connected} '
+            f += f'Vertex {vertex} (predecessor {value.predecessor}):\t-->'
+            for connected in value.connections:
+                f += f'\t{connected} (cost {value.connections[connected]})\t'
+                f += '|'
             f += f'\n'
         return f
 
-    def addVertex(self, key):
-        self.numVertices += 1
-        newVertex = Vertex(key)
-        self.vertices[key] = newVertex
-        return newVertex
+    # def addVertex(self, key):
+    #     newVertex = Vertex(key)
+    #     self.vertices[key] = newVertex
+    #     return newVertex
 
-    def getVertex(self, n):
-        return self.vertices[n] if n in self.vertices else None
-
-    def __contains__(self, n):
-        return n in self.vertices
-
-    def addEdge(self, f, t, cost=0):
-        if f not in self.vertices:
-            nv = self.addVertex(f)
-        if t not in self.vertices:
-            nv = self.addVertex(t)
-        self.vertices[f].addNeighbor(self.vertices[t], cost)
-
-    def getVertices(self):
-        return list(self.vertices.keys())
-
-    def __iter__(self):
-        return iter(self.vertices.values())
+    def addEdge(self, start, finish, cost=1):
+        if start not in self.vertices:
+            startVertex = Vertex(start)
+            self.vertices[start] = startVertex
+        if finish not in self.vertices:
+            finishVertex = Vertex(finish)
+            self.vertices[finish] = finishVertex
+        self.vertices[start].connections[finish] = cost
+        if not self.directed:
+            self.vertices[finish].connections[start] = cost
 
     def dfs(self):
+        self.clean_color_predecessor_distance()
         for aVertex in self:
-            aVertex.setColor('white')
-            aVertex.setPred(-1)
-        for aVertex in self:
-            if aVertex.getColor() == 'white':
+            if self[aVertex].color == 'white':
                 self.dfsvisit(aVertex)
 
-    def dfsvisit(self, startVertex):
-        startVertex.setCOLOR('gray')
+    def dfsvisit(self, startVertex_key):
+        self[startVertex_key].color = 'grey'
         self.time += 1
-        startVertex.setDiscovery(self.time)
-        for nextVertex in startVertex.getConnections():
-            if nextVertex.getColor() == 'white':
-                nextVertex.setPred(startVertex)
+        self[startVertex_key].discoveryTime = self.time
+        for nextVertex in self[startVertex_key].connections:
+            if self[nextVertex].color == 'white':
+                self[nextVertex].predecessor = startVertex_key
                 self.dfsvisit(nextVertex)
-        startVertex.setColor('black')
+        self[startVertex_key].color = 'black'
         self.time += 1
-        startVertex.setFinish(self.time)
+        self[startVertex_key].finish = self.time
 
-    def bfs(self, start: Vertex):
+    def bfs(self, start):
         """
-        O(V)
-        """
-        start.setDistance(0)
-        start.setPred(None)
+                O(V)
+                """
+        self.clean_color_predecessor_distance()
+        self[start].distance = 0
+        self[start].predecessor = None
         queue = deque([start])
         while queue:
-            current_vertex = self[queue.popleft().id]
-            # print('>>>', current_vertex.id)
-            for neighbor in current_vertex.connectedTo:
-                # print(neighbor.id, len(current_vertex.connectedTo))
-                neighbor = self[neighbor.id]
+            currentVertex_key = queue.popleft()
+            for neighbor_key in self[currentVertex_key].connections:
+                neighbor = self[neighbor_key]
                 if neighbor.color == 'white':
-                    neighbor.setColor('gray')
-                    neighbor.setDistance(current_vertex.getDistance() + 1)
-                    neighbor.setPred(current_vertex)
-                    queue.append(neighbor)
-            current_vertex.setColor('black')
+                    neighbor.color = 'gray'
+                    neighbor.distance = self[currentVertex_key].distance + 1
+                    neighbor.predecessor = currentVertex_key
+                    queue.append(neighbor_key)
+            self[currentVertex_key].color = 'black'
+
+    def traverse(self, toVertex):
+        x = self[toVertex]
+        while x.predecessor:
+            print(x.name)
+            x = self[x.predecessor]
+        print(x.name)
 
     def dijkstra(self, start):
         """
-        Finally, let us look at the running time of Dijkstra’s algorithm.
-        We first note that building the priority queue takes O(V) time since we initially
-        add every vertex in the graph to the priority queue. Once the queue is constructed the
-        while loop is executed once for every vertex since vertices are all added at the
-        beginning and only removed after that. Within that loop each call to delMin, takes
-        O(logV) time. Taken together that part of the loop and the calls to delMin take O(Vlog(V)).
-        The for loop is executed once for each edge in the graph, and within the for loop the call
-        to decreaseKey takes time O(Elog(V)). So the combined running time is O((V+E)log(V)).
-        """
+                Finally, let us look at the running time of Dijkstra’s algorithm.
+                We first note that building the priority queue takes O(V) time since we initially
+                add every vertex in the graph to the priority queue. Once the queue is constructed the
+                while loop is executed once for every vertex since vertices are all added at the
+                beginning and only removed after that. Within that loop each call to delMin, takes
+                O(logV) time. Taken together that part of the loop and the calls to delMin take O(Vlog(V)).
+                The for loop is executed once for each edge in the graph, and within the for loop the call
+                to decreaseKey takes time O(Elog(V)). So the combined running time is O((V+E)log(V)).
+                """
         pq = PriorityQueue()
-        start = self[start]
-        start.setDistance(0)
-        pq.buildHeap([(v.getDistance(), v.v) for v in self])
+        self.clean_color_predecessor_distance()
+        self[start].distance = 0
+        pq.buildHeap([(vertex.distance, vertex_key) for vertex_key, vertex in self])
         while not pq.isEmpty():
-            currentVert = self[pq.delMin()]
-            for nextVert in currentVert.getConnections():
-                # nextVert = self[nextVert.v]
-                newDist = currentVert.getDistance() + currentVert.getWeight(nextVert)
-                if newDist < nextVert.getDistance():
-                    nextVert.setDistance(newDist)
-                    nextVert.setPred(currentVert)
-                    pq.decreaseKey(nextVert.v, newDist) # rework
+            current_vertex = self[pq.delMin()]
+            for nex_vert_key in current_vertex.connections:
+                new_distance = current_vertex.distance + current_vertex.connections[nex_vert_key]
+                if new_distance < self[nex_vert_key].distance:
+                    self[nex_vert_key].distance = new_distance
+                    self[nex_vert_key].predecessor = current_vertex.name
+                    pq.decreaseKey(nex_vert_key, new_distance)
 
 
-def build_graph(graph_dict, weights=None):
-    # weights =weights
-    """
-    values must be in sets or in lists
-    """
-    # g = graph_dict.copy
-    graph = GraphList()
-    for vertex in graph_dict:
-        graph.addVertex(vertex)
-        verteces = graph_dict[vertex]
-        while verteces:
-            graph.addEdge(vertex, verteces.pop()) # TODO
+def build_graph(dic, costs=None, directed=False):
+    g = GraphList(directed=directed)
 
-    return graph
+    if costs:
+        for vertex in dic:
+            neighbours = dic[vertex]
+            while neighbours:
+                n = neighbours.pop()
+                g.addEdge(vertex, n, cost=costs[vertex][n])  # ?????
+    else:
+        for vertex in dic:
+            neighbours = dic[vertex]
+            while neighbours:
+                n = neighbours.pop()
+                g.addEdge(vertex, n)
+    return g
 
-
-def traverse(y: Vertex):
-    x = y
-    while x.getPred():
-        print(x.getId())
-        x = x.getPred()
-    print(x.getId())
-
-# class AdjNode:
-#
-#     def __init__(self, value):
-#         self.vertex = value
-#         self.next = None
-#
-#
-# class GraphList:
-#
-#     def __init__(self, num, weights=None):
-#         self.v = num
-#         self.graph = [None for _ in range(self.v)]
-#         self.weights = weights or {}
-#
-#     def add_edge(self, s, d, weight):
-#         node = AdjNode(d)
-#         node.next = self.graph[s]
-#         self.graph[s] = node
-#
-#         node = AdjNode(s)
-#         node.next = self.graph[d]
-#         self.graph[d] = node
-#
-#         self.weights[]
-#
-#     def __str__(self):
-#         f = ''
-#         for i in range(self.v):
-#             f += f'Vertex {i}:\n'
-#             temp = self.graph[i]
-#             while temp:
-#                 f += f' -> {temp.vertex}'
-#                 temp = temp.next
-#             f += '\n'
-#         return f
-
-# def dijkstra(self, start):
 if __name__ == '__main__':
     j = {
         'A': {'B', 'C'},
@@ -368,5 +286,30 @@ if __name__ == '__main__':
         'E': {'B', 'F'},
         'F': {'C', 'E'}
     }
-    b = build_graph(j)
-    b.dijkstra('A')
+    weights = {
+        'A': {'B': 2, 'C': 1},
+        'B': {'A': 2, 'D': 1, 'E': 3},
+        'C': {'A': 1, 'F': 1},
+        'D': {'B': 1},
+        'E': {'B': 3, 'F': 1},
+        'F': {'C': 1, 'E': 1}
+    }
+
+    graph = build_graph(j, costs=weights)
+    print(graph)
+    graph.dfsvisit('A')
+    print(graph)
+    graph.bfs('A')
+    print(graph)
+    graph.traverse('C')
+
+    print(graph['A'] == graph[graph['C'].predecessor])
+
+    graph.dijkstra('A')
+
+    for v, vertex in graph:
+        print(v, vertex.distance, end=' ')
+        while vertex.predecessor:
+            print(vertex, end=' - ')
+            vertex = graph[vertex.predecessor]
+        print(vertex)
