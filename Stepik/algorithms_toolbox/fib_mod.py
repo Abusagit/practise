@@ -27,7 +27,7 @@ def slow_fm(n, m):
     >>> slow_fm(1598753, 25897)
     20305
     """
-    from structures import algorithms as f
+    from DSA import algorithms as f
     return f.fib(n) % m
     
 

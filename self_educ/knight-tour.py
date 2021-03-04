@@ -1,4 +1,4 @@
-from structures.graphs import adjGraph as g
+from DSA.graphs import adjGraph as g
 
 
 def knights_graph(board_size):
