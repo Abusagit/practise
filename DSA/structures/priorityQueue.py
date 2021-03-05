@@ -2,7 +2,6 @@
 # Introduction to Data Structures and Algorithms in Python
 # Copyright 2005
 #
-import heapq
 import unittest
 
 
