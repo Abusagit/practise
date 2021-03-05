@@ -4,7 +4,7 @@ def binom_coeff_recur(n, k):
     return binom_coeff_recur(n - 1, k - 1) + binom_coeff_recur(n - 1, k)
 
 
-def binom_coeff_fact(n,k):
+def binom_coeff_fact(n, k):
     numerator, denominator = 1, 1
     for i in range(2, n + 1):
         numerator *= i

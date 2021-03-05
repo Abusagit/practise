@@ -1,6 +1,3 @@
-from DSA.basic.stacks import Stack
-
-
 def tree_height(n):
     tree = [int(i) for i in input().split()]
     structure = {}

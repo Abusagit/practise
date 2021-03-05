@@ -1,9 +1,9 @@
 import sys
 from collections import defaultdict, deque
-from DSA.basic import Stack
-from DSA.graphs import PriorityQueue
+from DSA.structures.stacks import Stack
+from DSA.structures.priorityQueue import PriorityQueue
 
-''' Strongle connected components''' # TODO
+''' Strongle connected components'''  # TODO
 
 
 class Graph:
@@ -61,68 +61,104 @@ class Graph:
 
 class GraphMatrix:
 
-    def __init__(self, size, edges=None, adjMatrix=None):
-        self.edges = edges or [[0 for _ in range(size)] for _ in range(size)]
-
-        self.adjMatrix = adjMatrix or [[0 for _ in range(size)] for _ in range(size)]
+    def __init__(self, size, vertices_dict, directed=False):
+        self.vertices = vertices_dict
+        self.directed = directed
+        self.adjacents = {}
+        self.matrix = [[0 for _ in range(size)] for _ in range(size)]
         self.size = size
 
-    def add_edge(self, v1, v2, cost=1):
-        if v1 == v2:
-            print(f'Same vertex {v1} and {v2}')
+    def add_edge(self, start, finish, cost):
+        if start == finish:
+            print(f'Same vertex {start} and {finish}')
         else:
-            self.adjMatrix[v1][v2], self.adjMatrix[v2][v1] = 1, 1
-            self.edges[v1][v2], self.edges[v2][v1] = cost, cost
+            self.matrix[start][finish] = cost
+            if self.adjacents.get(start):
+                self.adjacents[start].append(finish)
+            else:
+                self.adjacents[start] = [finish]
+            if not self.directed:
+                self.matrix[finish][start] = cost
+                if self.adjacents.get(finish):
+                    self.adjacents[finish].append(start)
+                else:
+                    self.adjacents[finish] = [start]
 
     def remove_edge(self, v1, v2):
-        if self.adjMatrix[v1][v2] == 0:
+        if self.matrix[v1][v2] == 0:
             print(f'No edge between {v1} and {v2}')
             return
-        self.adjMatrix[v1][v2], self.adjMatrix[v2][v1] = 0, 0
-        self.edges[v1][v2], self.edges[v2][v1] = 0, 0
+        self.matrix[v1][v2], self.matrix[v2][v1] = 0, 0
 
     def __len__(self):
         return self.size
 
     def __str__(self):
-        f = ''
-        for row in self.adjMatrix:
-            for val in row:
+        f = f'\t'
+        for i in range(self.size):
+            f += f'{self.vertices[i]}\t'
+        f += '\n'
+        for i in range(self.size):
+            f += f'{self.vertices[i]}\t'
+            for val in self.matrix[i]:
                 f += f'{val}\t'
             f += '\n'
         return f
 
-    def dijkstra(self):
-        def to_be_visited():
-            nonlocal visited_and_distance
-            nonlocal num_of_vertices
-            v = -10
-            for index in range(num_of_vertices):
-                if (visited_and_distance[index][0] == 0 and
-                        (v < 0 or visited_and_distance[index][1] <= visited_and_distance[v][1])):
-                    v = index
-            return v
+    def dijkstra(self, vertex):
+        pass  # TODO Solve this problem
+        # pq = PriorityQueue()
+        # pq.buildHeap([[(0, 0)] + [(0, sys.maxsize) for _ in range(self.size - 1)]])
+        #
+        # for vertex in range(self.size):
+        #     # Find next vertex to be visited
+        #     to_visit = pq.delMin()
+        #     for neighbor_index in range(self.size):
+        #         # Updating new distances
+        #         if self.adjMatrix[to_visit[0]][neighbor_index] == 1 and visited_and_distance[neighbor_index][0] == 0:
+        #             new_distance = visited_and_distance[to_visit][1] + self.edges[to_visit][neighbor_index]
+        #             if visited_and_distance[neighbor_index][1] > new_distance:
+        #                 visited_and_distance[neighbor_index][1] = new_distance
+        #
+        #         visited_and_distance[to_visit][0] = 1
+        # i = 0
 
-        num_of_vertices = len(self.adjMatrix)
-        visited_and_distance = [[0, 0]] + [[0, sys.maxsize] for _ in range(num_of_vertices - 1)]
+    def bellman_ford(self, start):
+        # Step 1: fill the distance array and predecessor array
+        distances = [float("inf") for _ in range(self.size)]
+        # Mark the source vertex
+        distances[start] = 0
+        backtrack = {start: None}
 
-        for vertex in range(num_of_vertices):
-            # Find next vertex to be visited
-            to_visit = to_be_visited()
-            for neighbor_index in range(num_of_vertices):
-                # Updating new distances
-                if self.adjMatrix[to_visit][neighbor_index] == 1 and visited_and_distance[neighbor_index][0] == 0:
-                    new_distance = visited_and_distance[to_visit][1] + self.edges[to_visit][neighbor_index]
-                    if visited_and_distance[neighbor_index][1] > new_distance:
-                        visited_and_distance[neighbor_index][1] = new_distance
+        # Step 2: relax edges |V| - 1 times
+        for _ in range(self.size - 1):
+            for vertex in range(self.size):
+                for neighbor in self.adjacents[vertex]:
+                    weight = self.matrix[vertex][neighbor]
+                    if distances[vertex] != float('-inf') and distances[vertex] + weight < distances[neighbor]:
+                        distances[neighbor] = distances[vertex] + weight
+                        backtrack[neighbor] = vertex
 
-                visited_and_distance[to_visit][0] = 1
-        i = 0
-
-        # Printing the distance
-        for distance in visited_and_distance:
-            print("Distance of ", chr(ord('a') + i), " from source vertex: ", distance[1])
-            i += 1
+        # Step 3: detect negative cycle
+        # if value changes then we have a negative cycle in the graph
+        # and we cannot find the shortest distances
+        for vertex in range(self.size):
+            for neighbor in self.adjacents[vertex]:
+                weight = self.matrix[vertex][neighbor]
+                if distances[vertex] != float('-inf') and distances[vertex] + weight < distances[neighbor]:
+                    print(f'Graph has negative weight cycle at vertices {self.vertices[vertex]} '
+                          f'and {self.vertices[neighbor]}')
+                    return
+        # No negative weight cycle found!
+        # Print the distance and predecessor array
+        print("Vertex Distance from Source")
+        # print(list(backtrack.items()))
+        for i in range(self.size):
+            print(f'{self.vertices[i]}, ({i}):\t\t{distances[i]}', end='\t|\t')
+            while i:
+                print(f'{i} <-', end='')
+                i = backtrack[i]
+            print(i)
 
 
 class Vertex:
@@ -136,7 +172,7 @@ class Vertex:
         self.finishTime = 0
 
     def __repr__(self):
-        s = f'Vertex {self.name}: disc {self.disc}; fin {self.finish}; dist {self.distance}; pred\t[{self.predecessor}]'
+        s = f'Vertex {self.name}: disc {self.discoveryTime}; fin {self.finishTime}; dist {self.distance}; pred\t[{self.predecessor}]'
         return s
 
     def __str__(self):
@@ -160,7 +196,7 @@ class GraphList:
             self[i].distance = float('inf')
 
     def __getitem__(self, item):
-        return self.vertices[item]
+        return self.vertices.get(item, None)
 
     def __contains__(self, item):
         return item in self.vertices
@@ -260,7 +296,17 @@ class GraphList:
                     pq.decreaseKey(nex_vert_key, new_distance)
 
 
-def build_graph(dic, costs=None, directed=False):
+def build_graphMatrix(number_of_vertices, vertex_list, vertices_dict, directed=False):
+    """
+    Vertex list - (start, finish, weight)
+    """
+    g = GraphMatrix(number_of_vertices, vertices_dict=vertices_dict, directed=directed)
+    for start, finish, weight in vertex_list:
+        g.add_edge(start, finish, weight)
+    return g
+
+
+def build_graphList(dic, costs=None, directed=False):
     g = GraphList(directed=directed)
 
     if costs:
@@ -276,6 +322,7 @@ def build_graph(dic, costs=None, directed=False):
                 n = neighbours.pop()
                 g.addEdge(vertex, n)
     return g
+
 
 if __name__ == '__main__':
     j = {
@@ -295,7 +342,7 @@ if __name__ == '__main__':
         'F': {'C': 1, 'E': 1}
     }
 
-    graph = build_graph(j, costs=weights)
+    graph = build_graphList(j, costs=weights)
     print(graph)
     graph.dfsvisit('A')
     print(graph)
@@ -313,3 +360,7 @@ if __name__ == '__main__':
             print(vertex, end=' - ')
             vertex = graph[vertex.predecessor]
         print(vertex)
+
+    h = build_graphMatrix(4, ((0, 1, 5), (0, 2, 4), (1, 3, 3), (2, 1, 6), (3, 2, 2)), vertices_dict= {0: 'A', 1: 'B', 2: 'C', 3: 'D'}, directed=True)
+    print(h)
+    h.bellman_ford(0)
