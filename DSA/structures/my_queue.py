@@ -2,7 +2,7 @@
 # Introduction to Data Structures and Algorithms in Python
 # Copyright 2005
 # 
-#queue.py
+#my_queue.py
 
 from collections import deque
 

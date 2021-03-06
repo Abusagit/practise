@@ -3,7 +3,7 @@ from collections import defaultdict, deque
 from DSA.structures.stacks import Stack
 from DSA.structures.priorityQueue import PriorityQueue
 
-''' Strongle connected components'''  # TODO
+''' Strongly connected components'''  # TODO
 
 
 class Graph:
@@ -61,9 +61,10 @@ class Graph:
 
 class GraphMatrix:
 
-    def __init__(self, size, vertices_dict, directed=False):
+    def __init__(self, size, vertices_dict, structure, directed=False):
         self.vertices = vertices_dict
         self.directed = directed
+        self.structure = structure
         self.adjacents = {}
         self.matrix = [[0 for _ in range(size)] for _ in range(size)]
         self.size = size
@@ -123,6 +124,72 @@ class GraphMatrix:
         #         visited_and_distance[to_visit][0] = 1
         # i = 0
 
+    def prim(self):
+        selected = [0 for _ in range(self.size)]
+        edges_number = 0
+        # the number of egde in minimum spanning tree will be
+        # always less than(V - 1), where V is number of vertices in
+        # graph
+        # choose 0th vertex and make it true
+        selected[0] = True
+        print("Edge : Weight\n")
+        while edges_number < self.size - 1:
+            # For every vertex in the set S, find the all adjacent vertices
+            # , calculate the distance from the vertex selected at step 1.
+            # if the vertex is already in the set S, discard it otherwise
+            # choose another vertex nearest to selected vertex  at step 1.
+            minimum = float('inf')
+            x = 0
+            y = 0
+            for i in range(self.size):
+                if selected[i]:
+                    for j in range(self.size):
+                        if not selected[j] and self.matrix[i][j]:
+                            # not in selected and there is an edge
+                            if minimum > self.matrix[i][j]:
+                                minimum = self.matrix[i][j]
+                                x = i
+                                y = j
+            print(f'{self.vertices[x]} - {self.vertices[y]} : {self.matrix[x][y]}')
+            selected[y] = True
+            edges_number += 1
+
+    def _find(self, parent, i):
+        return i if parent[i] == i else self._find(parent, parent[i])
+
+    def _apply_union(self, parent, rank, x, y):
+        xroot = self._find(parent, x)
+        yroot = self._find(parent, y)
+        if rank[xroot] < rank[yroot]:
+            parent[xroot] = yroot
+        elif rank[xroot] > rank[yroot]:
+            parent[yroot] = xroot
+        else:
+            parent[yroot] = xroot
+            rank[xroot] += 1
+
+    def kruskal(self):
+        result = []
+        i, e = 0, 0
+        graph = sorted(self.structure, key=lambda item: item[2])
+        # print(graph)
+        parent = []
+        rank = []
+        for node in range(self.size):
+            parent.append(node)
+            rank.append(0)
+        while e < self.size - 1:
+            u, v, w = graph[i]
+            i += 1
+            x = self._find(parent, u)
+            y = self._find(parent, v)
+            if x != y:
+                e += 1
+                result.append((u, v, w))
+                self._apply_union(parent, rank, x, y)
+        for u, v, weight in result:
+            print(f'{u} ({self.vertices[u]}) - {v} ({self.vertices[v]}): {weight}')
+
     def bellman_ford(self, start):
         # Step 1: fill the distance array and predecessor array
         distances = [float("inf") for _ in range(self.size)]
@@ -172,7 +239,8 @@ class Vertex:
         self.finishTime = 0
 
     def __repr__(self):
-        s = f'Vertex {self.name}: disc {self.discoveryTime}; fin {self.finishTime}; dist {self.distance}; pred\t[{self.predecessor}]'
+        s = f'Vertex {self.name}: disc {self.discoveryTime}; fin {self.finishTime}; ' \
+            f'dist {self.distance}; pred\t[{self.predecessor}]'
         return s
 
     def __str__(self):
@@ -300,7 +368,7 @@ def build_graphMatrix(number_of_vertices, vertex_list, vertices_dict, directed=F
     """
     Vertex list - (start, finish, weight)
     """
-    g = GraphMatrix(number_of_vertices, vertices_dict=vertices_dict, directed=directed)
+    g = GraphMatrix(number_of_vertices, structure=vertex_list, vertices_dict=vertices_dict, directed=directed)
     for start, finish, weight in vertex_list:
         g.add_edge(start, finish, weight)
     return g
@@ -361,6 +429,8 @@ if __name__ == '__main__':
             vertex = graph[vertex.predecessor]
         print(vertex)
 
-    h = build_graphMatrix(4, ((0, 1, 5), (0, 2, 4), (1, 3, 3), (2, 1, 6), (3, 2, 2)), vertices_dict= {0: 'A', 1: 'B', 2: 'C', 3: 'D'}, directed=True)
+    h = build_graphMatrix(4, ((0, 1, 5), (0, 2, 4), (1, 3, 3), (2, 1, 6), (3, 2, 2)),
+                          vertices_dict={0: 'A', 1: 'B', 2: 'C', 3: 'D'}, directed=True)
     print(h)
     h.bellman_ford(0)
+    h.kruskal()
