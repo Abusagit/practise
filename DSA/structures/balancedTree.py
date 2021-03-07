@@ -1,6 +1,6 @@
 import unittest
 from .bst import BinarySearchTree, TreeNode
-from DSA.structures.binaryTree import height
+from DSA.structures.parseTree import height
 
 
 class AVLTree(BinarySearchTree):

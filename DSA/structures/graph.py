@@ -65,25 +65,19 @@ class GraphMatrix:
         self.vertices = vertices_dict
         self.directed = directed
         self.structure = structure
-        self.adjacents = {}
+        self.adjacents = {number: [] for number in range(size)}
         self.matrix = [[0 for _ in range(size)] for _ in range(size)]
         self.size = size
 
-    def add_edge(self, start, finish, cost):
+    def add_edge(self, start, finish, cost=1):
         if start == finish:
             print(f'Same vertex {start} and {finish}')
         else:
             self.matrix[start][finish] = cost
-            if self.adjacents.get(start):
-                self.adjacents[start].append(finish)
-            else:
-                self.adjacents[start] = [finish]
+            self.adjacents[start].append(finish)
             if not self.directed:
                 self.matrix[finish][start] = cost
-                if self.adjacents.get(finish):
-                    self.adjacents[finish].append(start)
-                else:
-                    self.adjacents[finish] = [start]
+                self.adjacents[finish].append(start)
 
     def remove_edge(self, v1, v2):
         if self.matrix[v1][v2] == 0:
@@ -106,8 +100,63 @@ class GraphMatrix:
             f += '\n'
         return f
 
+    @classmethod
+    def _transpose(cls, size, adjacents, matrix, directed, vertices):
+        g = cls(size=size, vertices_dict=vertices, directed=directed, structure=None)
+        for vertex in range(size):
+            for neighbour in adjacents[vertex]:
+                g.add_edge(neighbour, vertex, cost=matrix[vertex][neighbour])
+        return g
+
+    def dfs(self, d, visited_vertex, res=None):
+        res = res or []
+        visited_vertex[d] = True
+        res.append(f'{self.vertices[d]} ({d}) ')
+        # print(f'{self.vertices[d]} ({d}) - ', end=' ')
+        for i in self.adjacents[d]:
+            if not visited_vertex[i]:
+                self.dfs(i, visited_vertex, res)
+        return res
+
+    def _fill_order(self, d, visited_vertex, stack):
+        visited_vertex[d] = True
+        for i in self.adjacents[d]:
+            if not visited_vertex[i]:
+                self._fill_order(i, visited_vertex, stack)
+        stack.push(d)
+
+    def kosaraju(self):
+        print('Strongly connected components are:')
+        stack = Stack()
+        visited = [False for _ in range(self.size)]
+
+        for i in range(self.size):
+            if not visited[i]:
+                self._fill_order(i, visited_vertex=visited, stack=stack)
+
+        gr = GraphMatrix._transpose(size=self.size, adjacents=self.adjacents, matrix=self.matrix, directed=self.directed,
+                            vertices=self.vertices)
+        visited = [False for _ in range(self.size)]
+
+        while stack:
+            i = stack.pop()
+            if not visited[i]:
+                result = gr.dfs(i, visited_vertex=visited)
+                result.reverse()
+                print(' - '.join(result))
+
     def floyd_warshall(self):
-        distance
+        distance = [[i if i else float('inf') for i in row] for row in self.matrix]
+        for k in range(self.size):
+            for i in range(self.size):
+                for j in range(self.size):
+                    distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j])
+
+        _a = '\t'.join((self.vertices[i] for i in range(self.size)))
+        print(f"\t{_a}")
+
+        for i, row in enumerate(distance):
+            print(self.vertices[i], *row, sep='\t')
 
     def dijkstra(self, vertex):
         pass  # TODO Solve this problem
@@ -435,5 +484,23 @@ if __name__ == '__main__':
     h = build_graphMatrix(4, ((0, 1, 5), (0, 2, 4), (1, 3, 3), (2, 1, 6), (3, 2, 2)),
                           vertices_dict={0: 'A', 1: 'B', 2: 'C', 3: 'D'}, directed=True)
     print(h)
+    print(h.vertices)
+    print(h.adjacents)
     h.bellman_ford(0)
     h.kruskal()
+    h.floyd_warshall()
+    h.kosaraju()
+
+    h = {n: l for l, n in zip('ABCDEFGH', range(8))}
+    g = GraphMatrix(8, vertices_dict=h, structure=None, directed=True)
+    g.add_edge(0, 1)
+    g.add_edge(1, 2)
+    g.add_edge(2, 3)
+    g.add_edge(2, 4)
+    g.add_edge(3, 0)
+    g.add_edge(4, 5)
+    g.add_edge(5, 6)
+    g.add_edge(6, 4)
+    g.add_edge(6, 7)
+    print(g)
+    g.kosaraju()
