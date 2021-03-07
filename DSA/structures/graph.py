@@ -106,6 +106,9 @@ class GraphMatrix:
             f += '\n'
         return f
 
+    def floyd_warshall(self):
+        distance
+
     def dijkstra(self, vertex):
         pass  # TODO Solve this problem
         # pq = PriorityQueue()
