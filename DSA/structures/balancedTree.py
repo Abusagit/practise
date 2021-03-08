@@ -143,7 +143,7 @@ class Node:
         self.right = right
 
     def __repr__(self):
-        return '{color} {val} Node'.format(color=self.color, val=self.value)
+        return f'{self.color} {self.value} Node'
 
     def __iter__(self):
         if self.left.color != NIL:
@@ -651,6 +651,10 @@ class RedBlackTree:
 
 
 """
+
+
+
+
 
 
 

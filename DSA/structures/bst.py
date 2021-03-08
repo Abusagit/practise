@@ -132,8 +132,8 @@ class BinarySearchTree:
         if self.size > 1:
             nodeToRemove = self._get(key, self.root)
             if nodeToRemove:
-                self.remove(nodeToRemove)
                 self.size -= 1
+                return self.remove(nodeToRemove)
             else:
                 raise KeyError(f'Error, key "{key}" is not in tree')
         elif self.size == 1 and self.root.key == key:
@@ -143,7 +143,7 @@ class BinarySearchTree:
             raise KeyError(f'Error, key "{key}" is not in tree')
 
     def __delitem__(self, key):
-        self.delete(key)
+        return self.delete(key)
 
     def inorder(self):
         self._inorder(self.root)
