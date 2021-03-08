@@ -58,7 +58,7 @@ class Graph:
                 gr.dfs(i, visited_vertex)
                 print('')
 
-
+# TODO this structure (u, v, w) disgusts me!!!!!!!!!!!
 class GraphMatrix:
 
     def __init__(self, size, vertices_dict, structure, directed=False):
@@ -224,6 +224,12 @@ class GraphMatrix:
         result = []
         i, e = 0, 0
         graph = sorted(self.structure, key=lambda item: item[2])
+        print(graph)
+        # structure = []
+        # for i in range(self.size):
+        #     for j in self.adjacents[i]:
+        #         structure.append((i, j, self.matrix[i][j]))
+        # graph = sorted(structure, key=lambda item: item[2])
         # print(graph)
         parent = []
         rank = []

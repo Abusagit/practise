@@ -12,5 +12,5 @@ def primes(n):
 
 
 if __name__ == '__main__':
-    for i in primes(31):
-        print(i)
+    for j in primes(31):
+        print(j)
