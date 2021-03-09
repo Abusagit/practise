@@ -2,60 +2,58 @@ from collections import defaultdict, deque
 from DSA.structures.stacks import Stack
 from DSA.structures.priorityQueue import PriorityQueue
 
-''' Strongly connected components'''  # TODO
 
-
-class Graph:
-
-    def __init__(self, vertex):
-        self.v = vertex
-        self.graph = defaultdict(set)  # Changed to set factory
-
-    def add_edge(self, s, d):
-        self.graph[s].add(d)
-
-    def dfs(self, d, visited_vertex):
-        visited_vertex[d] = True
-        print(d, end=' ')
-        for i in self.graph[d]:
-            if not visited_vertex[i]:
-                self.dfs(i, visited_vertex)
-
-    def fill_order(self, d, visited_vertex, stack):
-        visited_vertex[d] = True
-        for i in self.graph[d]:
-            if not visited_vertex[i]:
-                self.fill_order(i, visited_vertex, stack)
-        stack.push(d)
-
-    def transpose(self):
-        g = Graph(self.v)
-
-        for i in self.graph:
-            for j in self.graph[i]:
-                g.add_edge(j, i)
-        return g
-
-    def print_scc(self):  # TODO
-        """ Kosaraju's Algorithm.
-        O(V+E)
-        """
-        stack = Stack()
-        visited_vertex = [False for _ in range(self.v)]
-
-        for i in range(self.v):
-            if not visited_vertex[i]:
-                self.fill_order(i, visited_vertex, stack)
-
-        gr = self.transpose()
-
-        visited_vertex = [False for _ in range(self.v)]
-
-        while stack:
-            i = stack.pop()
-            if not visited_vertex[i]:
-                gr.dfs(i, visited_vertex)
-                print('')
+# class Graph:
+#
+#     def __init__(self, vertex):
+#         self.v = vertex
+#         self.graph = defaultdict(set)  # Changed to set factory
+#
+#     def add_edge(self, s, d):
+#         self.graph[s].add(d)
+#
+#     def dfs(self, d, visited_vertex):
+#         visited_vertex[d] = True
+#         print(d, end=' ')
+#         for i in self.graph[d]:
+#             if not visited_vertex[i]:
+#                 self.dfs(i, visited_vertex)
+#
+#     def fill_order(self, d, visited_vertex, stack):
+#         visited_vertex[d] = True
+#         for i in self.graph[d]:
+#             if not visited_vertex[i]:
+#                 self.fill_order(i, visited_vertex, stack)
+#         stack.push(d)
+#
+#     def transpose(self):
+#         g = Graph(self.v)
+#
+#         for i in self.graph:
+#             for j in self.graph[i]:
+#                 g.add_edge(j, i)
+#         return g
+#
+#     def print_scc(self):
+#         """ Kosaraju's Algorithm.
+#         O(V+E)
+#         """
+#         stack = Stack()
+#         visited_vertex = [False for _ in range(self.v)]
+#
+#         for i in range(self.v):
+#             if not visited_vertex[i]:
+#                 self.fill_order(i, visited_vertex, stack)
+#
+#         gr = self.transpose()
+#
+#         visited_vertex = [False for _ in range(self.v)]
+#
+#         while stack:
+#             i = stack.pop()
+#             if not visited_vertex[i]:
+#                 gr.dfs(i, visited_vertex)
+#                 print('')
 
 
 class GraphMatrix:
@@ -155,24 +153,6 @@ class GraphMatrix:
 
         for i, row in enumerate(distance):
             print(self.vertices[i], *row, sep='\t')
-
-    def dijkstra(self, vertex):
-        pass  # TODO Solve this problem
-        # pq = PriorityQueue()
-        # pq.buildHeap([[(0, 0)] + [(0, sys.maxsize) for _ in range(self.size - 1)]])
-        #
-        # for vertex in range(self.size):
-        #     # Find next vertex to be visited
-        #     to_visit = pq.delMin()
-        #     for neighbor_index in range(self.size):
-        #         # Updating new distances
-        #         if self.adjMatrix[to_visit[0]][neighbor_index] == 1 and visited_and_distance[neighbor_index][0] == 0:
-        #             new_distance = visited_and_distance[to_visit][1] + self.edges[to_visit][neighbor_index]
-        #             if visited_and_distance[neighbor_index][1] > new_distance:
-        #                 visited_and_distance[neighbor_index][1] = new_distance
-        #
-        #         visited_and_distance[to_visit][0] = 1
-        # i = 0
 
     def prim(self):
         selected = [0 for _ in range(self.size)]
