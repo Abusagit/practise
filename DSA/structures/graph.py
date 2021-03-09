@@ -1,4 +1,3 @@
-import sys
 from collections import defaultdict, deque
 from DSA.structures.stacks import Stack
 from DSA.structures.priorityQueue import PriorityQueue
@@ -58,13 +57,12 @@ class Graph:
                 gr.dfs(i, visited_vertex)
                 print('')
 
-# TODO this structure (u, v, w) disgusts me!!!!!!!!!!!
+
 class GraphMatrix:
 
-    def __init__(self, size, vertices_dict, structure, directed=False):
+    def __init__(self, size, vertices_dict, directed=False):
         self.vertices = vertices_dict
         self.directed = directed
-        self.structure = structure
         self.adjacents = {number: [] for number in range(size)}
         self.matrix = [[0 for _ in range(size)] for _ in range(size)]
         self.size = size
@@ -102,7 +100,7 @@ class GraphMatrix:
 
     @classmethod
     def _transpose(cls, size, adjacents, matrix, directed, vertices):
-        g = cls(size=size, vertices_dict=vertices, directed=directed, structure=None)
+        g = cls(size=size, vertices_dict=vertices, directed=directed)
         for vertex in range(size):
             for neighbour in adjacents[vertex]:
                 g.add_edge(neighbour, vertex, cost=matrix[vertex][neighbour])
@@ -134,8 +132,8 @@ class GraphMatrix:
             if not visited[i]:
                 self._fill_order(i, visited_vertex=visited, stack=stack)
 
-        gr = GraphMatrix._transpose(size=self.size, adjacents=self.adjacents, matrix=self.matrix, directed=self.directed,
-                            vertices=self.vertices)
+        gr = GraphMatrix._transpose(size=self.size, adjacents=self.adjacents, matrix=self.matrix,
+                                    directed=self.directed, vertices=self.vertices)
         visited = [False for _ in range(self.size)]
 
         while stack:
@@ -222,20 +220,19 @@ class GraphMatrix:
 
     def kruskal(self):
         result = []
-        i, e = 0, 0
-        graph = sorted(self.structure, key=lambda item: item[2])
-        print(graph)
-        # structure = []
-        # for i in range(self.size):
-        #     for j in self.adjacents[i]:
-        #         structure.append((i, j, self.matrix[i][j]))
-        # graph = sorted(structure, key=lambda item: item[2])
+
+        structure = []
+        for i in range(self.size):
+            for j in self.adjacents[i]:
+                structure.append((i, j, self.matrix[i][j]))
+        graph = sorted(structure, key=lambda item: item[2])
         # print(graph)
         parent = []
         rank = []
         for node in range(self.size):
             parent.append(node)
             rank.append(0)
+        i, e = 0, 0
         while e < self.size - 1:
             u, v, w = graph[i]
             i += 1
@@ -426,7 +423,7 @@ def build_graphMatrix(number_of_vertices, vertex_list, vertices_dict, directed=F
     """
     Vertex list - (start, finish, weight)
     """
-    g = GraphMatrix(number_of_vertices, structure=vertex_list, vertices_dict=vertices_dict, directed=directed)
+    g = GraphMatrix(number_of_vertices, vertices_dict=vertices_dict, directed=directed)
     for start, finish, weight in vertex_list:
         g.add_edge(start, finish, weight)
     return g
@@ -498,7 +495,7 @@ if __name__ == '__main__':
     h.kosaraju()
 
     h = {n: l for l, n in zip('ABCDEFGH', range(8))}
-    g = GraphMatrix(8, vertices_dict=h, structure=None, directed=True)
+    g = GraphMatrix(8, vertices_dict=h, directed=True)
     g.add_edge(0, 1)
     g.add_edge(1, 2)
     g.add_edge(2, 3)
