@@ -2,7 +2,7 @@ import heapq  # очередь с приоритетами
 from collections import Counter  # считает сразу количество символов
 
 
-class Node():
+class Node:
     def __init__(self, left, right):
         self.left = left
         self.right = right
@@ -12,7 +12,7 @@ class Node():
         self.right.walk(code, acc + '1')
 
 
-class Leaf():
+class Leaf:
     def __init__(self, char):
         self.char = char
 

@@ -7,7 +7,7 @@ import unittest
 # this heap takes key value pairs, we will assume that the keys are integers
 
 
-class BinHeap:
+class BinHeapMin:
     def __init__(self):
         self.heapList = [0]
         self.currentSize = 0
@@ -23,7 +23,7 @@ class BinHeap:
             i -= 1
         print(self.heapList, i)
                         
-    def percDown(self,i):
+    def percDown(self, i):
         while i * 2 <= self.currentSize:
             mc = self.minChild(i)
             if self.heapList[i] > self.heapList[mc]:
@@ -89,7 +89,7 @@ class FooThing:
 
 class TestBinHeap(unittest.TestCase):
     def setUp(self):
-        self.theHeap = BinHeap()
+        self.theHeap = BinHeapMin()
         self.theHeap.insert(FooThing(5,'a'))                               
         self.theHeap.insert(FooThing(9,'d'))                  
         self.theHeap.insert(FooThing(1,'x'))
@@ -106,7 +106,7 @@ class TestBinHeap(unittest.TestCase):
         assert self.theHeap.delMin().val  == 'a'
 
     def testMixed(self):
-        myHeap = BinHeap()
+        myHeap = BinHeapMin()
         myHeap.insert(9)
         myHeap.insert(1)
         myHeap.insert(5)
@@ -117,7 +117,7 @@ class TestBinHeap(unittest.TestCase):
         assert myHeap.delMin() == 5
 
     def testDupes(self):
-        myHeap = BinHeap()
+        myHeap = BinHeapMin()
         myHeap.insert(9)
         myHeap.insert(1)
         myHeap.insert(8)
@@ -128,7 +128,7 @@ class TestBinHeap(unittest.TestCase):
         assert myHeap.delMin() == 8
 
     def testBuildHeap(self):
-        myHeap = BinHeap()
+        myHeap = BinHeapMin()
         myHeap.buildHeap([9,5,6,2,3])
         f = myHeap.delMin()
         print("f = ", f)

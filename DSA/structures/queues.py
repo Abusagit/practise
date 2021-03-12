@@ -49,6 +49,15 @@ class PriorityQueue:
         self.heapArray = [(0, 0)]
         self.currentSize = 0
 
+    def __bool__(self):
+        return len(self.heapArray) > 1
+
+    def __repr__(self):
+        return f'{self.heapArray[1:]}'
+
+    def __len__(self):
+        return len(self.heapArray) - 1  # subtract first supporting element
+
     def buildHeap(self, alist):
         self.currentSize = len(alist)
         self.heapArray = [(0, 0)]
@@ -67,6 +76,13 @@ class PriorityQueue:
                 self.heapArray[i] = self.heapArray[mc]
                 self.heapArray[mc] = tmp
             i = mc
+
+    def changePriority(self, index, new_prior):
+        old_priority, self.heapArray[index][0] = self.heapArray[index][0], new_prior
+        if old_priority > new_prior:
+            self.percUp(index)
+        else:
+            self.percDown(index)
 
     def minChild(self, i):
         if i * 2 > self.currentSize:
