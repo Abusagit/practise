@@ -1,4 +1,5 @@
 import unittest
+import sys
 
 
 class BinarySearchTree:
@@ -25,6 +26,24 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
         self.size = 0
+
+    def _print(self, node, indent='', last=True):
+        if node:
+            sys.stdout.write(indent)
+            if last:
+                sys.stdout.write('R----')
+                indent += '\t'
+            else:
+                sys.stdout.write('L----')
+                indent += '|\t'
+
+            print(f'{node.key} ({node.payload})')
+            self._print(node.leftChild, indent, last=False)
+            self._print(node.rightChild, indent)
+
+    def __str__(self):
+        self._print(node=self.root)
+        return ''
 
     def put(self, key, val):
         if self.root:

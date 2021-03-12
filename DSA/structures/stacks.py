@@ -6,7 +6,7 @@ class Stack:
         self.items = deque()
 
     def isEmpty(self):
-        return len(self.items) == 0
+        return self.__len__()
 
     def push(self, item):
         self.items.append(item)

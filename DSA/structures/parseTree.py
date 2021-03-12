@@ -5,7 +5,7 @@
 import operator
 
 
-class BinaryTree:
+class ParseTree:
     """
     A recursive implementation of Binary Tree
     Using links and Nodes approach.
@@ -21,10 +21,10 @@ class BinaryTree:
 
     def insertLeft(self, newNode):
 
-        if isinstance(newNode, BinaryTree):
+        if isinstance(newNode, ParseTree):
             t = newNode
         else:
-            t = BinaryTree(newNode)
+            t = ParseTree(newNode)
 
         if self.leftChild:
             t.left = self.leftChild
@@ -32,10 +32,10 @@ class BinaryTree:
         self.leftChild = t
 
     def insertRight(self, newNode):
-        if isinstance(newNode, BinaryTree):
+        if isinstance(newNode, ParseTree):
             t = newNode
         else:
-            t = BinaryTree(newNode)
+            t = ParseTree(newNode)
 
         if self.rightChild:
             t.right = self.rightChild
@@ -146,11 +146,11 @@ def height(tree):
 
 
 if __name__ == '__main__':
-    t = BinaryTree(7)
+    t = ParseTree(7)
     t.insertLeft(3)
     t.insertRight(9)
     inorder(t)
-    x = BinaryTree('*')
+    x = ParseTree('*')
     x.insertLeft('+')
     l = x.getLeftChild()
     l.insertLeft(4)

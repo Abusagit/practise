@@ -1,6 +1,7 @@
 import unittest
-from .bst import BinarySearchTree, TreeNode
+from .bin_searchTree import BinarySearchTree, TreeNode
 from DSA.structures.parseTree import height
+import sys
 
 
 class AVLTree(BinarySearchTree):
@@ -134,7 +135,7 @@ RED = 'RED'
 NIL = 'NIL'
 
 
-class Node:
+class RBNode:
     def __init__(self, value, color, parent, left=None, right=None):
         self.value = value
         self.color = color
@@ -175,9 +176,9 @@ class Node:
         return sum((int(self.left.color != NIL), int(self.right.color != NIL)))
 
 
-class RedBlackTree:
+class RBTree:
     # every node has null nodes as children initially, create one such object for easy management
-    NIL_LEAF = Node(value=None, color=NIL, parent=None)
+    NIL_LEAF = RBNode(value=None, color=NIL, parent=None)
 
     def __init__(self):
         self.count = 0
@@ -188,20 +189,43 @@ class RedBlackTree:
             'R': self._left_rotation
         }
 
+    def _print(self, node, indent='', last=True):
+
+        if node != self.NIL_LEAF:
+            sys.stdout.write(indent)
+            if last:
+                sys.stdout.write('R----')
+                indent += '\t'
+            else:
+                sys.stdout.write('L----')
+                indent += '|\t'
+
+            color = node.color
+            print(f'{node.value} ({color})')
+            self._print(node.left, indent, last=False)
+            self._print(node.right, indent)
+
+    def __str__(self):
+        self._print(node=self.root)
+        return ''
+
     def __iter__(self):
         if not self.root:
             return list()
         yield from self.root.__iter__()
 
+    def __delitem__(self, key):
+        self.remove(key)
+
     def add(self, value):
         if not self.root:
-            self.root = Node(value, color=BLACK, parent=None, left=self.NIL_LEAF, right=self.NIL_LEAF)
+            self.root = RBNode(value, color=BLACK, parent=None, left=self.NIL_LEAF, right=self.NIL_LEAF)
             self.count += 1
             return
         parent, node_dir = self._find_parent(value)
-        if node_dir is None:
+        if not node_dir:
             return  # value is in the tree
-        new_node = Node(value=value, color=RED, parent=parent, left=self.NIL_LEAF, right=self.NIL_LEAF)
+        new_node = RBNode(value=value, color=RED, parent=parent, left=self.NIL_LEAF, right=self.NIL_LEAF)
         if node_dir == 'L':
             parent.left = new_node
         else:
@@ -229,7 +253,7 @@ class RedBlackTree:
         self._remove(node_to_remove)
         self.count -= 1
 
-    def contains(self, value) -> bool:
+    def __contains__(self, value) -> bool:
         """ Returns a boolean indicating if the given value is present in the tree """
         return bool(self.find_node(value))
 
@@ -238,7 +262,8 @@ class RedBlackTree:
         Given a value, return the closest value that is equal or bigger than it,
         returning None when no such exists
         """
-        if self.root is None: return None
+        if not self.root:
+            return None
         last_found_val = None if self.root.value < value else self.root.value
 
         def find_ceil(node):
@@ -265,7 +290,8 @@ class RedBlackTree:
         Given a value, return the closest value that is equal or less than it,
         returning None when no such exists
         """
-        if self.root is None: return None
+        if not self.root:
+            return None
         last_found_val = None if self.root.value > value else self.root.value
 
         def find_floor(node):
@@ -648,38 +674,6 @@ class RedBlackTree:
             sibling = parent.right
             direction = 'R'
         return sibling, direction
-
-
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
 
 
 class BinaryTreeTests(unittest.TestCase):

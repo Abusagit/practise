@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
 from DSA.structures.stacks import Stack
-from DSA.structures.priorityQueue import PriorityQueue
+from DSA.structures.queues import PriorityQueue
 
 
 # class Graph:

@@ -1,14 +1,49 @@
-# Bradley N. Miller, David L. Ranum
-# Introduction to Data Structures and Algorithms in Python
-# Copyright 2005
-#
+from collections import deque
 import unittest
+
+
+class Deque:
+    def __init__(self):
+        self.items = deque()
+
+    def isEmpty(self):
+        return self.size()
+
+    def addFront(self, item):
+        self.items.append(item)
+
+    def addRear(self, item):
+        self.items.appendleft(item)
+
+    def removeFront(self):
+        return self.items.pop()
+
+    def removeRear(self):
+        return self.items.popleft()
+
+    def size(self):
+        return len(self.items)
+
+
+class Queue:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def enqueue(self, item):
+        self.items.insert(0, item)
+
+    def dequeue(self):
+        return self.items.pop()
+
+    def size(self):
+        return len(self.items)
 
 
 # this implementation of binary heap takes key value pairs,
 # we will assume that the keys are all comparable
-
-
 class PriorityQueue:
     def __init__(self):
         self.heapArray = [(0, 0)]

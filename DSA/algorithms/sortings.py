@@ -1,18 +1,19 @@
 import random
 import heapq
 
+
 def check_sorted(array, ascending=True):
-    '''
+    """
     Tests whether array is sorted or not
     O(N)
 
     int(True) = 1 --> +1
     int(False) = 0 --> -1
     x*2-1 <--- flag for ascending or descending check
-    '''
+    """
     N = len(array)
-    for i in range(N-1):
-        if array[i] > array[i+1] if ascending else array[i] < array[i+1]:
+    for i in range(N - 1):
+        if array[i] > array[i + 1] if ascending else array[i] < array[i + 1]:
             return False
     return True
 
@@ -26,6 +27,7 @@ def selectionSort(array):
                 smallest = array[i]
                 smallest_index = i
         return smallest_index
+
     new_array = []
     for i in range(len(array)):
         smallest = find_smallest(array)
@@ -40,7 +42,7 @@ def merge_arrays(left, right):
     M = [None] * (len(left) + len(right))
     # print(C)
     i = k = n = 0
-    while i < len(left) and k < len(right): # Пока не вышли за границы массива
+    while i < len(left) and k < len(right):  # Пока не вышли за границы массива
         if left[i] <= right[k]:
             M[n] = left[i]
             i += 1
@@ -80,6 +82,7 @@ def quickSort(a):
         greater = [i for i in a if i > a[pivot]]
         # print('greater', greater)
         return quickSort(less) + middle + quickSort(greater)
+
 
 # def partition_stable(a, l, r):
 #     x, j, t = a[l], l, r
@@ -132,24 +135,24 @@ def heapsort(array):
 
 
 def insert_sort(array):
-    '''Sort by inserts'''
+    """Sort by inserts"""
     for top in range(1, len(array)):
         k = top
-        while k > 0 and array[k-1] > array[k]:
-            array[k], array[k-1] = array[k-1], array[k]
+        while k > 0 and array[k - 1] > array[k]:
+            array[k], array[k - 1] = array[k - 1], array[k]
             k -= 1
 
 
 def choise_sort(array):
-    '''sort by choises'''
+    """sort by choises"""
     for pos in range(len(array)):
-        for k in range(pos+1, len(array)):
+        for k in range(pos + 1, len(array)):
             if array[k] < array[pos]:
                 array[pos], array[k] = array[k], array[pos]
 
 
 def bubble_sort(array):
-    '''sort by Bubble-sorting method'''
+    """sort by Bubble-sorting method"""
     for bypass in range(1, len(array)):
         for k in range(len(array) - bypass):
             if array[k] > array[k + 1]:
@@ -174,10 +177,11 @@ def countingSort(array, place=1, in_place=False):
             array[i] = output[i]
     return output
 
+
 def _count_sort(arr, place):
     size = len(arr)
     output = [0 for _ in range(size)]
-    count = [0 for _ in range(10)] # Decimal system
+    count = [0 for _ in range(10)]  # Decimal system
 
     for i in range(size):
         index = arr[i] // place
@@ -195,6 +199,7 @@ def _count_sort(arr, place):
 
     for i in range(size):
         arr[i] = output[i]
+
 
 def radixSort(array):
     max_element = max(array)
