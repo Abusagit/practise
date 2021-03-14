@@ -1,27 +1,21 @@
-import math
-n=50
-print(math.log(math.log(n, 2)))
-print(math.sqrt(math.log(n, 4)))
-print(math.log(n, 3))
+class MyDescriptor(object):
+    """Это класс дескриптора."""
 
-print(math.log(n, 2) ** 2)
-print(math.sqrt(n))
-print(n / math.log(n, 5))
-
-print()
-print(math.log(math.factorial(n),2))
-print(3 ** math.log(n, 2))
-print(n ** 2)
-
-print(7 ** (math.log(n, 2)))
-print(math.log(n, 2) ** (math.log(n, 2)))
-print(n ** (math.sqrt(n)))
+    def __get__(self, instance, owner):
+        # Зачастую здесь возвращают значение, хранящееся в instance -
+        # см. my_owner ниже.
+        return 'Экземпляр %s, класс %s' % (instance, owner)
 
 
-print()
-print(n ** (math.log(n, 2)))
-print(2 ** n)
-print(4 ** n)
-print(2 ** (3 * n))
-print(math.factorial(n))
-print(2 ** (2 ** n))
+class MyOwner(object):
+    """Это класс владелец дескрипторов."""
+
+    field1 = MyDescriptor()
+    field2 = MyDescriptor()
+
+
+my_owner = MyOwner()
+print(my_owner.field1)
+
+my_owner.__dict__['field1'] = 'some'
+print(my_owner.field1)  # some
