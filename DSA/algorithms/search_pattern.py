@@ -159,7 +159,35 @@ def _bmh_bad_character(string, pattern):
     return answer
 
 
-def rabin_karp()
+def rabin_karp(text, pattern):
+    answer = []
+    n = len(text)
+    m = len(pattern)
+    q = 1000000007
+    p = t = 0
+    h = 1
+    d = 10
+    for i in range(m - 1):
+        h = (h * d) % q
+    # Calculate hash value for pattern and text
+    for i in range(m):
+        p = (d * p + ord(pattern[i])) % q
+        t = (d * t + ord(text[i])) % q
+
+    # Find the match
+    for i in range(n - m + 1):
+        if p == t:
+            for j in range(m):  # this symbol-by-symbol compare slows algorithm a little bit and it can go without it
+                if text[i + j] != pattern[j]:
+                    break
+            else:
+                answer.append(i)
+        if i < n - m:
+            t = (d * (t - ord(text[i]) * h) + ord(text[i + m])) % q
+
+            if t < 0:
+                t += q
+    return answer
 
 if __name__ == '__main__':
     g = '1'
@@ -195,3 +223,7 @@ if __name__ == '__main__':
     for test in tests:
         print(turbo_bmh(test[2], test[1]))
         assert turbo_bmh(test[2], test[1]) == test[0]
+        assert rabin_karp(test[2], test[1]) == test[0]
+
+    print(turbo_bmh(s, sub))
+    print(rabin_karp(s, sub))
