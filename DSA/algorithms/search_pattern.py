@@ -159,6 +159,8 @@ def _bmh_bad_character(string, pattern):
     return answer
 
 
+def rabin_karp()
+
 if __name__ == '__main__':
     g = '1'
     f = 'asdadsasd'
