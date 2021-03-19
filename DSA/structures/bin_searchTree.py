@@ -165,31 +165,34 @@ class BinarySearchTree:
         return self.delete(key)
 
     def inorder(self):
-        self._inorder(self.root)
-
-    def _inorder(self, tree):
-        if tree:
-            self._inorder(tree.leftChild)
-            print(tree.key)
-            self._inorder(tree.rightChild)
+        inorder(self.root)
 
     def postorder(self):
-        self._postorder(self.root)
-
-    def _postorder(self, tree):
-        if tree:
-            self._postorder(tree.rightChild)
-            self._postorder(tree.leftChild)
-            print(tree.key)
-
-    def _preorder(self, tree):
-        if tree:
-            print(tree.key)
-            self._preorder(tree.leftChild)
-            self._preorder(tree.rightChild)
+        postorder(self.root)
 
     def preorder(self):
-        self._preorder(self, self.root)
+        preorder(self.root)
+
+
+def preorder(tree):
+    if tree:
+        print(tree.key, end=' ')
+        preorder(tree.leftChild)
+        preorder(tree.rightChild)
+
+
+def inorder(tree):
+    if tree:
+        inorder(tree.leftChild)
+        print(tree.key, end=' ')
+        inorder(tree.rightChild)
+
+
+def postorder(tree):
+    if tree:
+        postorder(tree.rightChild)
+        postorder(tree.leftChild)
+        print(tree.key, end=' ')
 
 
 class TreeNode:
