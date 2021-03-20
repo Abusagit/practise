@@ -6,7 +6,7 @@ class BinarySearchTree:
     """
     Author:  Brad Miller
     Date:  1/15/2005
-    Description:  Imlement a binary search tree with the following interface
+    Description:  Implement a binary search tree with the following interface
                   functions:
                   __contains__(y) <==> y in x
                   __getitem__(y) <==> x[y]
@@ -51,6 +51,13 @@ class BinarySearchTree:
         else:
             self.root = TreeNode(key, val)
         self.size += 1
+
+    def updateSum(self, root, destination):
+        while root != destination:
+            right = root.right.sum if root.right else 0
+            left = root.left.sum if root.left else 0
+            root.sum = right + left
+            root = root.parent
 
     def _put(self, key, val, currentNode):
         if key < currentNode.key:
@@ -203,6 +210,7 @@ class TreeNode:
         self.rightChild = right
         self.parent = parent
         self.balanceFactor = 0
+        self.sum_ = key
 
     def hasLeftChild(self):
         return self.leftChild

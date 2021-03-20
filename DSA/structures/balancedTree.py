@@ -1,7 +1,7 @@
 import unittest
+import sys
 from .bin_searchTree import BinarySearchTree, TreeNode
 from DSA.structures.parseTree import height
-import sys
 
 
 class AVLTree(BinarySearchTree):
@@ -23,7 +23,6 @@ class AVLTree(BinarySearchTree):
                   values()
                   put(k,v)
     """
-
     def _put(self, key, val, currentNode):
         if key < currentNode.key:
             if currentNode.hasLeftChild():
@@ -68,6 +67,7 @@ class AVLTree(BinarySearchTree):
             else:
                 # single right
                 self.rotateRight(node)
+
 
     def rotateLeft(self, rotRoot):
         newRoot = rotRoot.rightChild

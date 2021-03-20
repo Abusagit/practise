@@ -1,7 +1,6 @@
 import os
 
 
-# TODO Knuth-Morris-Pratt for this problem
 def finder(filename):
     """
 

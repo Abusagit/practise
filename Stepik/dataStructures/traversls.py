@@ -1,5 +1,6 @@
 import sys
 
+
 class Node:
     def __init__(self, key, value, left=None, right=None, parent=None):
         self.key = key
@@ -82,45 +83,59 @@ class Tree:
         if node.key < key:
             return self._find(node.right, key)
 
-    def check2(self, keys):
-        if keys:
-            for key in keys:
-                if not self._find(self.root, key):
-                    break
-            else:
-                print('CORRECT')
-                return
-
-        print('INCORRECT')
-
     def __inorder(self, root, answer=None):
-        answer = answer or []
         if root:
-            self.__inorder(root.left, answer=answer)
+            answer = self.__inorder(root.left, answer=answer) or []
             answer.append(root.key)
-            self.__inorder(root.right, answer=answer)
+            answer = self.__inorder(root.right, answer=answer) or []
         return answer
 
     def check(self):
-        traversal = self.__inorder(self.root)
-        print(traversal)
-        min_ = float('-inf')
-        for i in range(len(traversal) - 1):
-            min_ = max(min_, traversal[i])
-            if min_ > traversal[i + 1]:
-                break
-        else:
-            return 'CORRECT'
-        return 'INCORRECT'
+        if self.n:
+            traversal = self.__inorder(self.root)
+            # print(traversal)
+            max_ = float('-inf')
+            for i in range(len(traversal) - 1):
+                max_ = max(max_, traversal[i])
+                if max_ > traversal[i + 1]:
+                    break
+            else:
+                return 'CORRECT'
+            return 'INCORRECT'
+        return 'CORRECT'
 
+    @staticmethod
+    def maxleft(root):
+        if not root:
+            return float('-inf')
+        while root.right:
+            root = root.right
+        return root.key
 
-def readTree():
-    stdin = iter(sys.stdin.read().strip().split('\n'))
-    n = int(next(stdin))
+    @staticmethod
+    def minright(root):
+        if not root:
+            return float('inf')
+        if not root.left:
+            return root.key
+        while root.left:
+            root = root.left
+        return root.key
+
+    def check2(self, root):
+        if root:
+
+            if not (self.maxleft(root.left) < root.key < self.minright(root.right)):
+                return False
+            return self.check2(root.left) and self.check2(root.right)
+        return True
+
+def read():
+    stdin = sys.stdin
+    n = int(stdin.readline().strip())
+
+    nodes = tuple(tuple(map(int, stdin.readline().strip().split())) for _ in range(n))
     t = Tree(n)
-    nodes = tuple(tuple(map(int, next(stdin).split())) for _ in range(n))
-    # print(nodes)
-    keys_ = (i[0] for i in nodes)
 
     for index, (key, left, right) in enumerate(nodes):
         left = left if left != -1 else None
@@ -128,34 +143,19 @@ def readTree():
 
         t.add(key, value=index, left=left, right=right)
     t.adjust_relation()
-    return t, keys_
+    return t
 
 
-def read():
-    n = int(sys.stdin.readline().strip())
-    # print(n)
-    stdin = sys.stdin.read().strip().split('\n')
-    t = Tree(n)
-
-    nodes = sorted(tuple(map(int, stdin[i].split())) for i in range(n))
-
-    if nodes:
-        for index, (key, left, right) in enumerate(nodes):
-            left = left if left != -1 else None
-            right = right if right != -1 else None
-
-            t.add(key, value=index, left=left, right=right)
-        t.adjust_relation()
-        return t, (i[0] for i in nodes)
-    return t, None
-
-
-bin_tree, keys = read()
+bin_tree = read()
 # bin_tree.inorder(bin_tree.root)
 # print()
 # bin_tree.preorder(bin_tree.root)
 # print()
 # bin_tree.postorder(bin_tree.root)
-print(bin_tree.check())
+# print(bin_tree)
+# print(bin_tree.structure)
+print(bin_tree)
+
+print(f'{"CORRECT" if bin_tree.check2(bin_tree.root) else "INCORRECT"}')
 
 
