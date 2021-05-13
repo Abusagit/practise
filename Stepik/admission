@@ -1,0 +1,41 @@
+from itertools import product
+from functools import reduce
+
+
+def comb(n, k):
+    """Генерация индексов сочетаний из `n` по `k` без повторений."""
+    d = list(range(k))
+    yield d
+
+    while True:
+        i = k - 1
+        while i >= 0 and d[i] + k - i + 1 > n:
+            i -= 1
+        if i < 0:
+            return
+
+        d[i] += 1
+        for j in range(i + 1, k):
+            d[j] = d[j - 1] + 1
+
+        yield d
+
+
+def binomial_prob(probabilities):
+    n = len(probabilities)
+    probs = [0 for _ in range(n + 1)]
+    for times in range(1, n):
+        prob_of_head_this_amount_of_times = 0
+        for combination in comb(n, times):
+            prob_success = reduce(lambda x, y: x * y, [probabilities[i] for i in combination])
+            prob_fail = reduce(lambda x, y: x * y, [(1 - probabilities[k]) for k in range(n) if k not in combination])
+            prob_of_head_this_amount_of_times += prob_success * prob_fail
+        probs[times] = prob_of_head_this_amount_of_times
+    probs[-1] = reduce(lambda x, y: x * y, probabilities)
+    probs[0] = 1 - sum(probs[1:])
+
+    return probs
+
+
+probs = list(map(float, input().split()))
+print(*binomial_prob(probs))
