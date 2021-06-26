@@ -105,7 +105,10 @@ class PriorityQueue:
             i //= 2
 
     def add(self, k):
-        self.heapArray.append(k)
+        if isinstance(k, (tuple, list)):
+            self.heapArray.append(k)
+        else:
+            self.heapArray.append((k, 0))
         self.currentSize += 1
         self.percUp(self.currentSize)
 
@@ -116,6 +119,9 @@ class PriorityQueue:
         self.heapArray.pop()
         self.percDown(1)
         return retval
+
+    def getMin(self):
+        return self.heapArray[1][1]
 
     def isEmpty(self):
         return True if self.currentSize == 0 else False

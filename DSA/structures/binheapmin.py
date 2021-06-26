@@ -58,7 +58,10 @@ class BinHeapMin:
         self.heapList.pop()
         self.percDown(1)
         return retval
-        
+
+    def getMin(self):
+        return self.heapList[1]
+
     def isEmpty(self):
         if self.currentSize == 0:
             return True

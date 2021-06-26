@@ -11,6 +11,7 @@ plotly = "*"
 matplotlib = "*"
 jupyter = "*"
 seaborn = "*"
+bio = "*"
 
 [dev-packages]
 
