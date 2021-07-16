@@ -55,7 +55,7 @@ We can streamline this by utilizing the groupby() and size() functions.
 print(df.groupby(['Gender', 'GenderGroup']).size())
 
 """
-This output indicates that we have two types of combinations.
+This output indicates that we have two types of combinations_.
 
 Case 1: Gender = F & Gender Group = 1
 Case 2: Gender = M & GenderGroup = 2.

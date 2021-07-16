@@ -1,7 +1,7 @@
 def dominant_prob(DD, Dd, dd):
     """
     :param k: 'DD'
-    :param m: 'Dd'
+    :param m_: 'Dd'
     :param n: 'dd'
     :return: probability of dominant allel processing
     """

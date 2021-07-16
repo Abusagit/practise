@@ -1,4 +1,4 @@
-n, m, k = (int(i) for i in input().split())  # n - rows, m - columns
+n, m, k = (int(i) for i in input().split())  # n - rows, m_ - columns
 a = [[0 for j in range(m)] for i in range(n)]
 print(a)
 for i in range(k):
