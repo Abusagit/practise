@@ -1,11 +1,13 @@
 import sys
 
 
-n, m, k = map(int, sys.stdin.readline().strip().split())  # n - rows, m - columns
+n, m, k = (int(i) for i in input().split())  # n - rows, m_ - columns
 a = [[0 for j in range(m)] for i in range(n)]
+print(a)
 for i in range(k):
-    row, col = map(lambda x: int(x) - 1, sys.stdin.readline().strip().split())
+    row, col = (int(i) - 1 for i in input().split())
     a[row][col] = -1
+print(a)
 for i in range(n):
     for j in range(m):
         if a[i][j] == 0:
@@ -19,7 +21,9 @@ for i in range(n):
 for i in range(n):
     for j in range(m):
         if a[i][j] == -1:
-            print('*', end=' ')
+            print('*', end='')
+        elif a[i][j] == 0:
+            print('.', end='')
         else:
-            print(a[i][j], end=' ')
+            print(a[i][j], end='')
     print()
