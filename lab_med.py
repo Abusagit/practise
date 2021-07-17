@@ -1,6 +1,7 @@
 def international_normalizing_ratio(t_patient, t_norm, ISI) -> float:
     return (t_patient / t_norm) ** ISI
 
+
 def prothrombine_ratio(t_observing, t_standard):
     return t_observing / t_standard
 
