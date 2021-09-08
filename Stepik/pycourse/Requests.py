@@ -1,7 +1,7 @@
 import requests
 
 # request link:
-res = requests.get("https://docs.python.orgaaaaa/3.5/")
+res = requests.get("https://docs.python.org/3.5/")
 # status-code 200 - OK
 print(res.status_code)
 # print type of content
